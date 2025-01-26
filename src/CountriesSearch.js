@@ -2,61 +2,47 @@ import React, { useState, useEffect } from "react";
 
 const CountriesSearch = () => {
   const [countries, setCountries] = useState([]);
-  const [filteredCountries, setFilteredCountries] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [search, setSearch] = useState("");
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await fetch(
-          "https://countries-search-data-prod-812920491762.asia-south1.run.app/countries"
-        );
+        const response = await fetch("https://example-api.com/countries"); // Replace with your API URL
         if (!response.ok) {
           throw new Error("Failed to fetch countries");
         }
         const data = await response.json();
         setCountries(data);
-        setFilteredCountries(data);
-      } catch (error) {
-        console.error("Error fetching countries:", error);
+      } catch (err) {
+        console.error("Error fetching countries:", err);
+        setError(err.message);
       }
     };
+
     fetchCountries();
   }, []);
 
-  const handleSearch = (event) => {
-    const searchTerm = event.target.value.toLowerCase();
-    setSearchTerm(searchTerm);
-    if (searchTerm === "") {
-      setFilteredCountries(countries);
-    } else {
-      const filtered = countries.filter(
-        (country) => country.common && country.common.toLowerCase().includes(searchTerm)
-      );
-      setFilteredCountries(filtered);
-    }
-  };
-  
+  const filteredCountries = countries.filter((country) =>
+    country.common.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <div className="container">
+    <div>
+      <h1>Country Search</h1>
       <input
         type="text"
         placeholder="Search for countries..."
-        value={searchTerm}
-        onChange={handleSearch}
-        className="search-bar"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
       />
-      <div className="countries-grid">
+      {error && <p data-testid="error-message" style={{ color: "red" }}>Error: {error}</p>}
+      <div className="countries-container">
         {filteredCountries.length > 0 ? (
           filteredCountries.map((country) => (
-            <div className="countryCard" key={country.code}>
-              <img
-                src={country.png}
-                alt={country.name}
-                className="country-flag"
-              />
-              <p className="country-name">{country.common}</p>
+            <div key={country.common} data-testid="country-card" className="country-container">
+              <img src={country.png} alt={`${country.common} flag`} />
+              <p>{country.common}</p>
             </div>
           ))
         ) : (
