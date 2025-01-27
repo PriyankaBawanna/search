@@ -15,7 +15,7 @@ const CountriesSearch = () => {
         const data = await response.json();
         setCountries(data);
       } catch (err) {
-        console.error("Error fetching countries:", err);
+        console.error("No request ever occurred", err);
         setError(err.message);
       }
     };
@@ -47,7 +47,7 @@ const CountriesSearch = () => {
             </div>
           ))
         ) : (
-          <p>No countries found</p>
+          <></>
         )}
       </div>
     </div>

@@ -4,10 +4,10 @@ import CountriesSearch from './CountriesSearch';
 
 function App() {
   return (
-   <>
+  
    <CountriesSearch />
    
-   </>
+   
   );
 }
 
