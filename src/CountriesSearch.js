@@ -4,19 +4,22 @@ const CountriesSearch = () => {
   const [countries, setCountries] = useState([]);
   const [search, setSearch] = useState("");
   const [error, setError] = useState(null);
+  const [loading,setLoading]=useState(true)
+
 
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await fetch("https://countries-search-data-prod-812920491762.asia-south1.run.app/countries"); 
+        const response = await fetch('https://countries-search-data-prod-812920491762.asia-south1.run.app/countries'); // Replace with your API endpoint
         if (!response.ok) {
-          throw new Error("Failed to fetch countries");
+          throw new Error('Network response was not ok');
         }
         const data = await response.json();
         setCountries(data);
       } catch (err) {
-        console.error("No request ever occurred", err);
-        setError(err.message);
+        setError('Error fetching countries');
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -26,7 +29,9 @@ const CountriesSearch = () => {
   const filteredCountries = countries.filter((country) =>
     country.common.toLowerCase().includes(search.toLowerCase())
   );
-
+   if(loading){
+    return<>Loading</>
+   }
   return (
     <div className="container">
       <h1>Country Search</h1>
@@ -55,3 +60,5 @@ const CountriesSearch = () => {
 };
 
 export default CountriesSearch;
+
+
