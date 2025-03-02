@@ -9,28 +9,28 @@ const CountriesSearch = () => {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await fetch('https://countries-search-data-prod-812920491762.asia-south1.run.app/countries');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
+        const res = await fetch('https://xcountries-backend.azurewebsites.net/all');
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
         }
-        const data = await response.json();
-        setCountries(data);
+        const response = await res.json();
+        console.log("response", response);
+        setCountries(response);
       } catch (err) {
         setError('Error fetching countries');
-        console.error("API Fetch Error:"); // Log the error to the console
+        console.error("API Fetch Error:", err);
       } finally {
         setLoading(false);
       }
     };
 
     fetchCountries();
-  }, []); // Empty array ensures the API is called only once on mount
+  }, []);
 
   const filteredCountries = countries.filter((country) =>
-    country.common.toLowerCase().includes(search.toLowerCase())
+    country.name.toLowerCase().includes(search.toLowerCase())
   );
 
- 
   return (
     <div className="container">
       <h1>Country Search</h1>
@@ -41,17 +41,20 @@ const CountriesSearch = () => {
         onChange={(e) => setSearch(e.target.value)}
         className="search-bar"
       />
-      {error && <p data-testid="error-message" style={{ color: "red" }}>Error: {error}</p>}
+      
+      {loading && <p>Loading...</p>}  {/* Loading message */}
+      {error && <p data-testid="error-message" style={{ color: "red" }}>Error: {error}</p>}  {/* Error message */}
+      
       <div className="countries-grid">
         {filteredCountries.length > 0 ? (
           filteredCountries.map((country) => (
-            <div key={country.common} data-testid="country-card" className="countryCard">
-              <img src={country.png} alt={`${country.common} flag`} className="country-flag" />
-              <p className="country-name">{country.common}</p>
+            <div key={country.alpha3Code} data-testid="country-card" className="countryCard">
+              <img src={country.flag} alt={`${country.name} flag`} className="country-flag" />
+              <p className="country-name">{country.name}</p>
             </div>
           ))
         ) : (
-         <></>
+          <> </>
         )}
       </div>
     </div>
@@ -59,6 +62,7 @@ const CountriesSearch = () => {
 };
 
 export default CountriesSearch;
+
 
 
 
