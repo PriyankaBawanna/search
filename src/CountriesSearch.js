@@ -17,7 +17,7 @@ const CountriesSearch = () => {
         setCountries(data);
       } catch (err) {
         setError('Error fetching countries');
-        console.error("API Fetch Error:", err); // Log the error to the console
+        console.error("API Fetch Error:"); // Log the error to the console
       } finally {
         setLoading(false);
       }
@@ -30,10 +30,7 @@ const CountriesSearch = () => {
     country.common.toLowerCase().includes(search.toLowerCase())
   );
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
+ 
   return (
     <div className="container">
       <h1>Country Search</h1>
@@ -54,7 +51,7 @@ const CountriesSearch = () => {
             </div>
           ))
         ) : (
-          <p>No countries found</p>
+         <></>
         )}
       </div>
     </div>
