@@ -14,11 +14,10 @@ const CountriesSearch = () => {
           throw new Error(`HTTP error! status: ${res.status}`);
         }
         const response = await res.json();
-        console.log("response", response);
         setCountries(response);
       } catch (err) {
         setError('Error fetching countries');
-        console.error("API Fetch Error:", err);
+        console.error("Error fetching data:", err);
       } finally {
         setLoading(false);
       }
